@@ -1,0 +1,18 @@
+experiment:
+  run_id: "2025-11-13_run01"
+  wavelength_nm: 632
+  camera_bits: 16
+  roi: {x: 200, y: 120, w: 640, h: 640}
+  frames_per_sample: 100
+  reference_label: "ref"
+  samples:
+    - {label: "n13311", n: 1.3311}
+    - {label: "n13450", n: 1.3450}
+    - {label: "n13529", n: 1.3529}
+
+paths:
+  base: "./data/2025-11-13_run01"
+  raw: "./data/2025-11-13_run01/raw"
+  processed: "./data/2025-11-13_run01/processed"
+  results: "./results/2025-11-13_run01"
+  logs: "./logs"
