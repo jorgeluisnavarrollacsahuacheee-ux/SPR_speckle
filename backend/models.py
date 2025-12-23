@@ -1,18 +1,57 @@
-from sqlalchemy import Column, Integer, Float, String
+from sqlalchemy import (
+    Column,
+    Integer,
+    Float,
+    String,
+    Boolean,
+    DateTime,
+    JSON,
+)
+from sqlalchemy.sql import func
 from backend.database import Base
 
+
+# ============================================================
+# REFERENCE
+# ============================================================
+class Reference(Base):
+    __tablename__ = "references"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    filename = Column(String, nullable=False)
+    path = Column(String, nullable=False)
+
+    iv = Column(Float, nullable=True)
+
+    active = Column(Boolean, default=False)
+
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+
+# ============================================================
+# SAMPLE
+# ============================================================
 class Sample(Base):
     __tablename__ = "samples"
 
     id = Column(Integer, primary_key=True, index=True)
-    sample_name = Column(String, index=True)       # nombre de la muestra
-    liquid_label = Column(String, index=True)      # tipo de líquido
-    fft = Column(Float, nullable=True)             # valor FFT
-    contrast = Column(Float, nullable=True)        # contraste
-    mean_intensity = Column(Float, nullable=True)  # intensidad media
-    zncc = Column(Float, nullable=True)            # correlación normalizada
-    rssd = Column(Float, nullable=True)            # desviación cuadrática
-    n_images = Column(Integer, nullable=True)      # número de imágenes asociadas
-    classification = Column(String, nullable=True) # clasificación opcional
-    folder_path = Column(String, nullable=True)    # ruta de carpeta
-    reference_path = Column(String, nullable=True) # ruta de referencia
+
+    filename = Column(String, nullable=False)
+
+    iv_original = Column(Float, nullable=True)
+    iv_processed = Column(Float, nullable=True)
+    zncc = Column(Float, nullable=True)
+    rssd = Column(Float, nullable=True)
+
+    ops = Column(JSON, nullable=True)
+    params = Column(JSON, nullable=True)
+    filter_metrics = Column(JSON, nullable=True)
+
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )

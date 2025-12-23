@@ -1,18 +1,41 @@
-# Python
+####################################
+# PYTHON / BACKEND
+####################################
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
 .venv/
 venv/
 .env
 
-# Node / Frontend
+####################################
+# BACKEND RUNTIME DATA (NO VERSIONAR)
+####################################
+backend/storage/
+backend/__pycache__/
+logs/
+*.log
+
+####################################
+# NODE / FRONTEND
+####################################
 frontend/node_modules/
 frontend/dist/
 frontend/.env
 
-# IDE/OS
+####################################
+# BUILD / CACHE
+####################################
+.cache/
+.parcel-cache/
+.vite/
+
+####################################
+# IDE / OS
+####################################
 .vscode/
+.idea/
 .DS_Store
 Thumbs.db

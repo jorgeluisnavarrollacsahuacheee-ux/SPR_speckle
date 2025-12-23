@@ -1,16 +1,20 @@
-// src/services/api.js
+// frontend/src/services/api.js
 import axios from "axios";
 
-// Base URL desde .env
-const BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+// ===============================
+// CONFIGURACIÓN BASE
+// ===============================
+export const BASE =
+  import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-// Instancia de Axios
 const api = axios.create({
   baseURL: BASE,
-  timeout: 10000, // 10 segundos
+  timeout: 20000,
 });
 
-// Interceptor de respuestas
+// ===============================
+// Interceptor global de errores
+// ===============================
 api.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -19,37 +23,47 @@ api.interceptors.response.use(
   }
 );
 
-// =====================
-// Funciones de servicio
-// =====================
+// ===============================
+// Utils
+// ===============================
+export function absUrl(path) {
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${BASE}${path.startsWith("/") ? path : `/${path}`}`;
+}
 
+// ===============================
+// REFERENCIAS (ALINEADO AL BACKEND)
+// ===============================
+
+// Subir referencia (activa automáticamente)
 export async function uploadReference(file) {
   const fd = new FormData();
   fd.append("file", file);
 
-  const res = await api.post("/process_reference", fd, {
+  const res = await api.post("/reference/upload", fd, {
     headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return res.data;
+}
+
+// Obtener referencia activa
+export async function getActiveReference() {
+  const res = await api.get("/reference/current");
+  return res.data;
+}
+
+// Procesar referencia activa
+export async function processActive(payload) {
+  const res = await api.post("/reference/process_active", payload, {
+    headers: { "Content-Type": "application/json" },
   });
   return res.data;
 }
 
-/**
- * operationsObj: ejemplo { fft: true, contrast: false, mean: true, ... }
- */
-export async function uploadSample({ file, sample_name, liquid_label, operationsObj }) {
-  const fd = new FormData();
-  fd.append("file", file);
-  fd.append("sample_name", sample_name);
-  fd.append("liquid_label", liquid_label);
-  fd.append("operations_json", JSON.stringify(operationsObj));
-
-  const res = await api.post("/process_sample", fd, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return res.data;
-}
-
+// Obtener historial
 export async function fetchHistory() {
-  const res = await api.get("/history");
+  const res = await api.get("/reference/history");
   return res.data;
 }
